@@ -123,7 +123,7 @@ This indicates that the firmware has been flashed successfully to the ESP-01 chi
 ## Preparing the PSLab board
 With the firmware successfully flashed onto the ESP-01 chip, the next step is to flash the appropriate firmware onto the PSLab board to enable communication over the UART2 bus.
 
-The firmware for the board is available [here](https://github.com/AsCress/pslab-firmware/tree/hack/uart2).
+The firmware for the board is available [here](https://github.com/bessman/pslab-firmware/tree/hack/uart2).
 
 You can follow the same steps as indicated in the [firmware repository](https://github.com/fossasia/pslab-firmware) to flash firmware to the PSLab board.
 
