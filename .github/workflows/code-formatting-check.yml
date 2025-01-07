@@ -1,0 +1,53 @@
+name: Code Formatting Check
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+
+    env:
+      CLANG_FORMAT_VERSION: 14.0.0
+
+    steps:
+      - name: Set environment variables
+        run: |
+          echo "CLANG_FORMAT_INSTALL_PATH=${{ runner.temp }}/clang-format" >> "$GITHUB_ENV"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download ClangFormat
+        id: download
+        uses: MrOctopus/download-asset-action@1.0
+        with:
+          repository: arduino/clang-static-binaries
+          tag: ${{ env.CLANG_FORMAT_VERSION }}
+          asset: clang-format_${{ env.CLANG_FORMAT_VERSION }}_Linux_64bit.tar.bz2
+          target: ${{ env.CLANG_FORMAT_INSTALL_PATH }}
+
+      - name: Install ClangFormat
+        run: |
+          cd "${{ env.CLANG_FORMAT_INSTALL_PATH }}"
+          tar --extract --file="${{ steps.download.outputs.name }}"
+          echo "${{ env.CLANG_FORMAT_INSTALL_PATH }}/clang_Linux_64bit" >> "$GITHUB_PATH"
+
+      - name: Format examples
+        run: |
+          chmod +x ./formatter.sh
+          ./formatter.sh
+
+      - name: Check formatting
+        run: |
+          if ! git diff --color --exit-code src/; then
+            echo "Please do an Auto Format on the sketches:"
+            echo "Arduino IDE: Tools > Auto Format"
+            echo "Arduino Web Editor: Ctrl + B"
+            exit 1
+          fi
