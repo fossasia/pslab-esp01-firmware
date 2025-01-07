@@ -25,7 +25,7 @@ jobs:
 
       - name: Download ClangFormat
         id: download
-        uses: MrOctopus/download-asset-action@1.0
+        uses: MrOctopus/download-asset-action@1.1
         with:
           repository: arduino/clang-static-binaries
           tag: ${{ env.CLANG_FORMAT_VERSION }}
