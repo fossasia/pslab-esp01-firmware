@@ -2,7 +2,7 @@
 #include <WiFiClient.h>
 
 const char *ssid = "PSLab";
-const char *password = "pslab";
+const char *password = "pslab123"; // Empty or 8-63 characters long
 
 WiFiServer server(80);
 
