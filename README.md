@@ -102,16 +102,16 @@ To program the ESP-01 chip using the Arduino UNO, establish the following connec
 - 3.3 V connections are common from UNO.
 - The RX pin connection between the UNO and the ESP-01 should be made through a voltage divider, since the ESP-01 operates on a 3.3 V logic level and receiving 5 V logic level from the UNO could damage it. A simple 3.3V voltage divider can be made very conveniently using two resistors (10K and 20K).
 
-## Flashing the Firmware  
+## Flashing the Firmware
 
-To flash the firmware onto your ESP01 chip using the Arduino IDE, follow these steps:  
+To flash the firmware onto your ESP01 chip using the Arduino IDE, follow these steps:
 
 1. After cloning this repository, open the file containing the firmware (`ESP01Firmware.ino`) in Arduino IDE.
 
 2. Select the **Generic ESP8266 Module** board from **Tools > Board**.
 3. Select the appropriate **COM Port** from **Tools > Port**.
 4. Click **Upload** and wait for the sketch to compile and uploading to begin.
-5. At this point of time, you should be able to see something like this in the output window: 
+5. At this point of time, you should be able to see something like this in the output window:
 ![connecting](docs/images/connecting.png)
 6. In order to allow for the firmware to be uploaded, the RESET pin of the ESP-01 chip should be connected to GND only for a short interval of time. Thus, when you see the above output, wait for a short interval (approx. 1s) and then disconnect the RESET pin from GND.
 7. Wait for the program to connect to the chip, until you see something like this:
@@ -130,7 +130,31 @@ You can follow the same steps as indicated in the [firmware repository](https://
 After flashing the firmware to the board, plug in the ESP-01 chip to the header on the board and you are good to go !
 
 
+## Building without Arduino IDE
 
+The firmware can be built without installing the Arduino IDE.
 
+### Requirements
 
+- git
+- python
+- make
 
+### Steps
+
+    # Current working directory is pslab-esp01-firmware
+    # Get the ESP8266 toolchain
+    git clone https://github.com/esp8266/Arduino esp8266
+    cd esp8266
+    git submodule update --init
+    cd tools
+    python get.py
+    cd ../..
+    export ESP_ROOT=$(readlink -f esp8266)
+    # Get makefile
+    git clone https://github.com/plerup/makeEspArduino
+    # Build
+    mkdir build
+    make -f makeEspArduino/makeEspArduino.mk SKETCH=src/ESP01Firmware/ESP01Firmware.ino BUILD_DIR=build
+
+ESP01Firmware.bin is now built in the build/ directory.
