@@ -123,12 +123,14 @@ This indicates that the firmware has been flashed successfully to the ESP-01 chi
 ## Preparing the PSLab board
 With the firmware successfully flashed onto the ESP-01 chip, the next step is to flash the appropriate firmware onto the PSLab board to enable communication over the UART2 bus.
 
-The firmware for the board is available [here](https://github.com/bessman/pslab-firmware/tree/hack/uart2).
+Use the 'pslab-firmware_v6_esp01.hex' image available from the firmware [release page](https://github.com/fossasia/pslab-firmware/releases/latest).
 
-You can follow the same steps as indicated in the [firmware repository](https://github.com/fossasia/pslab-firmware) to flash firmware to the PSLab board.
+Follow the steps as indicated in the [firmware repository](https://github.com/fossasia/pslab-firmware?tab=readme-ov-file#flashing) to flash firmware to the PSLab board.
 
 After flashing the firmware to the board, plug in the ESP-01 chip to the header on the board and you are good to go !
 
+> [!NOTE]
+> After flashing this firmware to the PSLab, it will no longer communicate over the USB port. To restore the ability to communicate with the PSLab over USB, flash the 'pslab-firmware_v6.hex' image instead (the PSLab always communicates over USB while in bootloader mode, regardless of which application firmware is loaded).
 
 ## Building without Arduino IDE
 
