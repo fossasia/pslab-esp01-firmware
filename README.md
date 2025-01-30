@@ -155,7 +155,6 @@ The firmware can be built without installing the Arduino IDE.
     git clone https://github.com/plerup/makeEspArduino
     # Build
     mkdir build
-    cd build
-    make -f ../makeEspArduino/makeEspArduino.mk SKETCH=../src/ESP01Firmware/ESP01Firmware.ino BUILD_DIR=.
+    make -f makeEspArduino/makeEspArduino.mk SKETCH=src/ESP01Firmware/ESP01Firmware.ino BUILD_DIR=build
 
 ESP01Firmware.bin is now built in the build/ directory.
