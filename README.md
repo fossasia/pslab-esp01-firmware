@@ -160,3 +160,7 @@ The firmware can be built without installing the Arduino IDE.
     make -f makeEspArduino/makeEspArduino.mk SKETCH=src/ESP01Firmware/ESP01Firmware.ino BUILD_DIR=build
 
 ESP01Firmware.bin is now built in the build/ directory.
+
+## Flashing without Arduino
+
+See [docs/esptool.md](https://github.com/fossasia/pslab-esp01-firmware/tree/main/docs/esptool.md).
