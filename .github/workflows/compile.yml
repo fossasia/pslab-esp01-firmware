@@ -46,6 +46,7 @@ jobs:
       - name: Upload Release Assets
         if: ${{ github.event_name == 'push' }}
         run: |
-          zip ESP01Firmware.zip src/ESP01Firmware/build/esp8266.esp8266.generic/ESP01Firmware.ino.bin
+          cd src/ESP01Firmware/build/esp8266.esp8266.generic
+          zip ESP01Firmware.zip ESP01Firmware.ino.bin
           gh release upload ${{ steps.draft-release.outputs.tag_name }} ESP01Firmware.zip --clobber
 
