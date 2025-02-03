@@ -3,14 +3,13 @@ tag-template: 'v$RESOLVED_VERSION'
 categories:
   - title: ':rocket: Features and Enhancements'
     labels:
-      - 'feat'
-      - 'Feature'
-      - 'Enhancement'
+      - 'feature'
+      - 'enhancement'
   - title: ':bug: Bug Fixes'
-    label: 'Fix'
+    label: 'fix'
   - title: ':wrench: Maintenance'
     labels:
-      - 'Chore'
+      - 'chore'
   - title: ':page_facing_up: Documentation'
     label: 'Documentation'
 change-template: '- $TITLE (#$NUMBER) - @$AUTHOR'
@@ -18,8 +17,8 @@ exclude-contributors:
   - 'dependabot'
   - 'dependabot[bot]'
 exclude-labels:
-  - 'Dependencies'
-  - 'Chore'
+  - 'dependencies'
+  - 'chore'
 version-resolver:
   major:
     labels:
