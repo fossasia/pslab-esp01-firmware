@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - main
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
@@ -31,3 +33,18 @@ jobs:
             - name: esp8266:esp8266
               source-url: http://arduino.esp8266.com/stable/package_esp8266com_index.json
           sketch-paths: src/
+          cli-compile-flags: |
+            - --export-binaries
+
+      - name: Draft Release
+        if: ${{ github.event_name == 'push' }}
+        id: draft-release
+        uses: release-drafter/release-drafter@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Assets
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          gh release upload ${{ steps.draft-release.outputs.tag_name }} src/ESP01Firmware/build/esp8266.esp8266.generic/ESP01Firmware.ino.bin --clobber
+
