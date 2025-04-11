@@ -13,7 +13,7 @@ void setup() {
 
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
-  WiFi.softAP(ssid + getSuffix(), password);
+  WiFi.softAP(ssid + get_suffix(), password);
 
   server.begin();
 }
