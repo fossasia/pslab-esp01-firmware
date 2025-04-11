@@ -37,10 +37,16 @@ void loop() {
   }
 }
 
-// Returns a suffix based on the NIC specific part of the MAC address.
-String getSuffix() {
-  String mac = WiFi.macAddress().substring(9, 17); // remove vendor ID
-  mac.remove(2, 1);                                // remove first colon
-  mac.remove(4, 1);                                // remove second colon
+/**
+ * @brief Return a suffix based on the NIC specific part of the MAC address
+ *
+ * @return The final three octets of the MAC address, prefixed with underscore
+ */
+String get_suffix()
+{
+   // Remove vendor ID
+  String mac = WiFi.macAddress().substring(9, 17);
+  // Remove colons
+  mac.replace(":", "")
   return "_" + mac;
 }
