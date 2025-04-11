@@ -13,7 +13,7 @@ void setup() {
 
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
-  WiFi.softAP(ssid, password);
+  WiFi.softAP(ssid + getSuffix(), password);
 
   server.begin();
 }
@@ -35,4 +35,12 @@ void loop() {
     }
     client.stop();
   }
+}
+
+// Returns a suffix based on the NIC specific part of the MAC address.
+String getSuffix() {
+  String mac = WiFi.macAddress().substring(9, 17); // remove vendor ID
+  mac.remove(2, 1); // remove first colon
+  mac.remove(4, 1); // remove second colon
+  return "_" + mac;
 }
