@@ -42,11 +42,10 @@ void loop() {
  *
  * @return The final three octets of the MAC address, prefixed with underscore
  */
-String get_suffix()
-{
-   // Remove vendor ID
+String get_suffix() {
+  // Remove vendor ID
   String mac = WiFi.macAddress().substring(9, 17);
   // Remove colons
-  mac.replace(":", "")
+  mac.replace(":", "");
   return "_" + mac;
 }
