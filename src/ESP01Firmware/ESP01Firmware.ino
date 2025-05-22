@@ -8,6 +8,7 @@ WiFiServer server(80);
 
 void setup() {
   Serial.begin(1000000);
+  Serial.setTimeout(0);
 
   WiFi.setPhyMode(WIFI_PHY_MODE_11N);
 
@@ -20,6 +21,7 @@ void setup() {
 
 void loop() {
   WiFiClient client = server.available();
+  client.setTimeout(0);
 
   if (client) {
     while (client.connected()) {
