@@ -21,7 +21,7 @@ jobs:
           echo "CLANG_FORMAT_INSTALL_PATH=${{ runner.temp }}/clang-format" >> "$GITHUB_ENV"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Download ClangFormat
         id: download
