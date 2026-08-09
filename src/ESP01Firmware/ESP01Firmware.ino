@@ -59,7 +59,7 @@ void loop() {
   if (activeTcpClient && activeTcpClient.connected() && tcpAvailable > 0) {
     uint8_t inBuf[512];
     size_t toRead =
-      (tcpAvailable > sizeof(inBuf)) ? sizeof(inBuf) : tcpAvailable;
+        (tcpAvailable > sizeof(inBuf)) ? sizeof(inBuf) : tcpAvailable;
     activeTcpClient.read(inBuf, toRead);
 
     Serial.write(inBuf, toRead);
@@ -70,7 +70,7 @@ void loop() {
     uint8_t outBuf[1024];
 
     size_t toRead =
-      (bytesAvailable > sizeof(outBuf)) ? sizeof(outBuf) : bytesAvailable;
+        (bytesAvailable > sizeof(outBuf)) ? sizeof(outBuf) : bytesAvailable;
     Serial.readBytes(outBuf, toRead);
     if (activeTcpClient && activeTcpClient.connected()) {
       activeTcpClient.write(outBuf, toRead);
