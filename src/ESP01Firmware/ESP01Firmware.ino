@@ -1,16 +1,16 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
-#include <WebSocketsServer.h> 
+#include <WebSocketsServer.h>
 
 const char *ssid = "PSLab";
-const char *password = "pslab123"; 
+const char *password = "pslab123";
 
 WiFiServer tcpServer(80);
 WebSocketsServer webSocket(81);
 WiFiClient activeTcpClient;
 
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
   if (type == WStype_TEXT || type == WStype_BIN) {
     Serial.write(payload, length);
   }
@@ -24,15 +24,15 @@ String get_suffix() {
 
 
 void setup() {
-  Serial.setRxBufferSize(4096); 
-  
+  Serial.setRxBufferSize(4096);
+
   Serial.begin(1000000);
   Serial.setTimeout(0);
 
   WiFi.setPhyMode(WIFI_PHY_MODE_11N);
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
-  
-  WiFi.setOutputPower(10.0); 
+
+  WiFi.setOutputPower(10.0);
 
   WiFi.softAP(ssid + get_suffix(), password);
 
@@ -62,21 +62,21 @@ void loop() {
     uint8_t inBuf[512];
     size_t toRead = (tcpAvailable > sizeof(inBuf)) ? sizeof(inBuf) : tcpAvailable;
     activeTcpClient.read(inBuf, toRead);
-    
-    Serial.write(inBuf, toRead); 
+
+    Serial.write(inBuf, toRead);
   }
 
 
   size_t bytesAvailable = Serial.available();
   if (bytesAvailable > 0) {
-    uint8_t outBuf[1024]; 
-    
+    uint8_t outBuf[1024];
+
     size_t toRead = (bytesAvailable > sizeof(outBuf)) ? sizeof(outBuf) : bytesAvailable;
     Serial.readBytes(outBuf, toRead);
     if (activeTcpClient && activeTcpClient.connected()) {
       activeTcpClient.write(outBuf, toRead);
     }
-    
+
     webSocket.broadcastBIN(outBuf, toRead);
   }
 }
