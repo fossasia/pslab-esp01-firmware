@@ -1,53 +1,82 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
+#include <WebSocketsServer.h> 
 
 const char *ssid = "PSLab";
-const char *password = "pslab123"; // Empty or 8-63 characters long
+const char *password = "pslab123"; 
 
-WiFiServer server(80);
+WiFiServer tcpServer(80);
+WebSocketsServer webSocket(81);
+WiFiClient activeTcpClient;
+
+
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
+  if (type == WStype_TEXT || type == WStype_BIN) {
+    Serial.write(payload, length);
+  }
+}
+
+String get_suffix() {
+  String mac = WiFi.macAddress().substring(9, 17);
+  mac.replace(":", "");
+  return "_" + mac;
+}
+
 
 void setup() {
+  Serial.setRxBufferSize(4096); 
+  
   Serial.begin(1000000);
   Serial.setTimeout(0);
 
   WiFi.setPhyMode(WIFI_PHY_MODE_11N);
-
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
+  
+  WiFi.setOutputPower(10.0); 
 
   WiFi.softAP(ssid + get_suffix(), password);
 
-  server.begin();
+  tcpServer.begin();
+  webSocket.begin();
+  webSocket.onEvent(webSocketEvent);
 }
+
 
 void loop() {
-  WiFiClient client = server.available();
-  client.setTimeout(0);
+  webSocket.loop();
 
-  if (client) {
-    while (client.connected()) {
-      if (client.available()) {
-        char dataFromClient = client.read();
-        Serial.write(dataFromClient);
-      }
-
-      if (Serial.available()) {
-        char dataFromMCU = Serial.read();
-        client.write(dataFromMCU);
-      }
+  if (tcpServer.hasClient()) {
+    if (!activeTcpClient || !activeTcpClient.connected()) {
+      if (activeTcpClient) activeTcpClient.stop();
+      activeTcpClient = tcpServer.available();
+      activeTcpClient.setTimeout(0);
+    } else {
+      WiFiClient extraClient = tcpServer.available();
+      extraClient.stop();
     }
-    client.stop();
   }
-}
 
-/**
- * @brief Return a suffix based on the NIC specific part of the MAC address
- *
- * @return The final three octets of the MAC address, prefixed with underscore
- */
-String get_suffix() {
-  // Remove vendor ID
-  String mac = WiFi.macAddress().substring(9, 17);
-  // Remove colons
-  mac.replace(":", "");
-  return "_" + mac;
+
+  size_t tcpAvailable = activeTcpClient.available();
+  if (activeTcpClient && activeTcpClient.connected() && tcpAvailable > 0) {
+    uint8_t inBuf[512];
+    size_t toRead = (tcpAvailable > sizeof(inBuf)) ? sizeof(inBuf) : tcpAvailable;
+    activeTcpClient.read(inBuf, toRead);
+    
+    Serial.write(inBuf, toRead); 
+  }
+
+
+  size_t bytesAvailable = Serial.available();
+  if (bytesAvailable > 0) {
+    uint8_t outBuf[1024]; 
+    
+    size_t toRead = (bytesAvailable > sizeof(outBuf)) ? sizeof(outBuf) : bytesAvailable;
+    Serial.readBytes(outBuf, toRead);
+    if (activeTcpClient && activeTcpClient.connected()) {
+      activeTcpClient.write(outBuf, toRead);
+    }
+    
+    webSocket.broadcastBIN(outBuf, toRead);
+  }
 }
