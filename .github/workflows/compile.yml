@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -32,6 +33,8 @@ jobs:
           platforms: |
             - name: esp8266:esp8266
               source-url: http://arduino.esp8266.com/stable/package_esp8266com_index.json
+          libraries: |
+            - name: WebSockets
           sketch-paths: src/
           cli-compile-flags: |
             - --export-binaries
@@ -49,4 +52,3 @@ jobs:
           cd src/ESP01Firmware/build/esp8266.esp8266.generic
           zip ESP01Firmware.zip ESP01Firmware.ino.bin
           gh release upload ${{ steps.draft-release.outputs.tag_name }} ESP01Firmware.zip --clobber
-
